@@ -4,6 +4,61 @@ import random
 import time
 import math
 
+diccionario = [
+    "agua", "sol", "luna", "tierra", "fuego", "aire", "bosque", "río", "mar", "montaña",
+    "valle", "nube", "viento", "roca", "arena", "cielo", "estrella", "planeta", "universo", "galaxia",
+    "animal", "planta", "flor", "hoja", "fruta", "semilla", "tronco", "raíz", "lago", "océano",
+    "barco", "puerto", "ciudad", "pueblo", "campo", "camino", "carretera", "auto", "bicicleta", "tren",
+    "avión", "puente", "casa", "edificio", "ventana", "puerta", "techo", "piso", "pared", "habitación",
+    "cama", "silla", "mesa", "escritorio", "lámpara", "reloj", "cuadro", "libro", "cuaderno", "lapicera",
+    "lápiz", "goma", "regla", "computadora", "pantalla", "teclado", "ratón", "cable", "teléfono", "televisor",
+    "radio", "música", "canción", "guitarra", "piano", "violín", "batería", "voz", "nota", "melodía",
+    "ritmo", "baile", "arte", "pintura", "escultura", "fotografía", "cine", "teatro", "poesía", "libreto",
+    "historia", "cuento", "novela", "palabra", "letra", "frase", "oración", "párrafo", "texto", "idioma",
+    "lengua", "voz", "oído", "ojo", "nariz", "boca", "mano", "brazo", "pierna", "pie",
+    "cabeza", "cara", "cabello", "piel", "corazón", "pulmón", "cerebro", "hueso", "músculo", "sangre",
+    "vida", "muerte", "amor", "odio", "alegría", "tristeza", "miedo", "valentía", "esperanza", "paz",
+    "guerra", "conflicto", "familia", "amigo", "enemigo", "niño", "niña", "hombre", "mujer", "persona",
+    "gente", "sociedad", "comunidad", "escuela", "facultad", "universidad", "profesor", "alumno", "clase", "examen",
+    "nota", "tarea", "trabajo", "oficina", "empresa", "fábrica", "tienda", "mercado", "dinero", "precio",
+    "valor", "billete", "moneda", "banco", "tarjeta", "cuenta", "ahorro", "deuda", "impuesto", "sueldo",
+    "economía", "política", "gobierno", "presidente", "ministro", "ley", "justicia", "derecho", "policía", "ejército",
+    "país", "nación", "frontera", "bandera", "himno", "cultura", "tradición", "costumbre", "idioma", "religión",
+    "fiesta", "comida", "bebida", "pan", "carne", "pescado", "pollo", "huevo", "leche", "queso",
+    "fruta", "verdura", "arroz", "pasta", "azúcar", "sal", "aceite", "vinagre", "agua", "vino",
+    "cerveza", "café", "té", "jugo", "postre", "helado", "torta", "galleta", "chocolate", "caramelo",
+    "tiempo", "hora", "minuto", "segundo", "día", "semana", "mes", "año", "siglo", "mañana",
+    "tarde", "noche", "ayer", "hoy", "mañana", "pasado", "futuro", "presente", "pasado", "eternidad",
+    "energía", "luz", "sombra", "color", "rojo", "azul", "verde", "amarillo", "negro", "blanco",
+    "gris", "naranja", "violeta", "rosa", "marrón", "dorado", "plateado", "transparente", "oscuro", "claro",
+    "forma", "línea", "punto", "círculo", "cuadro", "triángulo", "rectángulo", "figura", "dimensión", "volumen",
+    "peso", "masa", "tamaño", "altura", "ancho", "profundidad", "distancia", "velocidad", "aceleración", "fuerza",
+    "presión", "temperatura", "calor", "frío", "energía", "potencia", "resistencia", "corriente", "voltaje", "campo",
+    "imán", "metal", "hierro", "cobre", "oro", "plata", "plomo", "acero", "plástico", "madera",
+    "vidrio", "papel", "cartón", "cuero", "algodón", "lana", "seda", "piedra", "cerámica", "cemento",
+    "arena", "polvo", "gas", "vapor", "líquido", "sólido", "átomo", "molécula", "química", "física",
+    "matemática", "geometría", "álgebra", "estadística", "número", "suma", "resta", "multiplicación", "división", "ecuación",
+    "fórmula", "gráfico", "vector", "matriz", "función", "derivada", "integral", "límite", "teorema", "prueba",
+    "sistema", "control", "sensor", "actuador", "motor", "robot", "programa", "código", "algoritmo", "variable",
+    "constante", "bucle", "condición", "lista", "diccionario", "conjunto", "tupla", "archivo", "dato", "bit",
+    "byte", "memoria", "procesador", "chip", "circuito", "transistor", "resistor", "capacitor", "diodo", "led",
+    "pantalla", "display", "sensor", "arduino", "raspberry", "microcontrolador", "oscilador", "frecuencia", "amplitud", "fase",
+    "onda", "seno", "coseno", "tangente", "impulso", "respuesta", "retroalimentación", "error", "controlador", "modelo",
+    "planta", "estado", "salida", "entrada", "referencia", "ruido", "disturbio", "estabilidad", "polo", "cero",
+    "banda", "ancho", "frecuencia", "resonancia", "ganancia", "fase", "retardo", "tiempo", "respuesta", "constante",
+    "transitorio", "permanente", "amplitud", "armónico", "senal", "analógico", "digital", "muestreo", "cuantización", "filtro",
+    "pasabajo", "pasaalto", "pasabanda", "notch", "fft", "espectro", "frecuencia", "dominio", "transformada", "laplace",
+    "zeta", "discreto", "continuo", "controlador", "PID", "observador", "modelo", "espacio", "estados", "realimentación", "aceptar", "acceso", "acido", "activo", "actor", "actividad", "agenda", "agencia",
+    "agricultura", "alcance", "alegoria", "alianza", "almacen", "alto", "ambiente",
+    "ambiguo", "analisis", "anterior", "apetito", "aplicacion", "apoyo", "arreglo",
+    "articulo", "asiento", "asegurar", "asignatura", "asistencia", "asociacion",
+    "aspecto", "audio", "avanzar", "barrera", "basico", "beneficio", "biblioteca",
+    "bloque", "bomba", "botella", "brillo", "brisa", "brote", "bruto", "buscar",
+    "cabina", "calidad", "calendario", "calle", "calma", "camara", "cambio", "camisa",
+    "campana", "cantante", "capacidad", "capitulo", "captura", "cartel", "carta",
+    "casco", "caza"
+]
+
 # --- Funciones ---
 def generar_hash(contraseña):
     return hashlib.sha256(contraseña.encode()).hexdigest()
@@ -85,7 +140,7 @@ def cambiar_contraseña(hash_contraseña_actual):
 def juego_reflejos():
     print("\n--- JUEGO DE REFLEJOS ---")
     print("¿Cómo jugar?")
-    print("Cuando el contador llegue a 0 deberá escribir el número que aparece en pantalla lo más rápido posible")
+    print("Cuando el contador llegue a 0 deberá escribir la palabra que aparece en pantalla lo más rápido posible")
     print("¿Empezamos?")
     print("1. Empezar")
     print("2. Salir")
@@ -103,14 +158,14 @@ def juego_ref():
       print(f"Empezamos en {5-int(i)}")
       time.sleep(1)
 
-    num = random.randint(1, 1000)
-    print(f"El número es: {num}")
+    num = random.randint(1, 500)
+    print(f"La palabra es: {diccionario[num]}")
     inicio = time.time()
-    numero_escrito = int(input("Escribí el número que aparece en pantalla: "))
+    palabra_escrita = input("Escribí la palabra que aparece en pantalla: ")
     fin = time.time()
     tiempo_transcurrido = fin - inicio
 
-    if num != numero_escrito:
+    if diccionario[num] != palabra_escrita:
       print("Perdiste!")
     else:
       print(f"Ganaste en {tiempo_transcurrido:.4f} segundos")
