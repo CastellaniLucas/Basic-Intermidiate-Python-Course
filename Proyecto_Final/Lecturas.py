@@ -148,8 +148,8 @@ timebase_label.pack(side=tk.LEFT, padx=10)
 
 ################################################################
 # buffers para almacenamiento de datos y tiempos
-buffer = np.zeros(50000)   # buffer grande de historia
-write_idx = 0
+buffer = np.zeros(50000)   # buffer grande de historia / no se utiliza para graficar
+index = 0
 ################################################################
 
 ################################################################
@@ -163,9 +163,9 @@ N0 = min(N0, max_size)
 time_axis = make_time_axis(N0)
 display = np.zeros(N0)
 line, = ay.plot(time_axis, display)
-ay.set_xlim(time_axis[0], time_axis[-1])
-ay.set_ylim(0, 5.5)
-ay.set_xlim(time_axis[0], time_axis[-1])
+ay.set_xlim(time_axis[0], time_axis[-1])  # limites iniciales del eje x
+ay.set_ylim(0, 5.5) #Fijar limites del eje y, arduino no mide mas alla de 5V ni menos de 0V
+ay.set_xlim(time_axis[0], time_axis[-1])  # limites iniciales del eje x
 ay.set_xlabel("Tiempo [s]")
 ay.set_ylabel("Voltaje [V]")
 ay.grid(True)
@@ -192,10 +192,10 @@ def update_time_scale():            #actualiza eje temporal segun time/div
     line.set_xdata(time_axis)
     line.set_ydata(display)
     ay.set_xlim(-T/2, T/2)
-    ay.xaxis.set_major_locator(MultipleLocator(time_div))
+    ay.xaxis.set_major_locator(MultipleLocator(time_div))     #aca se actualizan los ticks mayores y menores, fijo grilla
     ay.xaxis.set_minor_locator(MultipleLocator(time_div / 5))
     canvas.draw_idle()
-def compute_measurements(sig, fs):  #calcula y actualiza mediciones
+def measurements(sig, fs):  #calcula y actualiza mediciones
     if sig is None or len(sig) < 10:
         return
 
@@ -210,27 +210,27 @@ def compute_measurements(sig, fs):  #calcula y actualiza mediciones
     vrms_var.set(f"Vrms: {vrms:6.3f} V")
 
 def update():                      #funcion principal de actualizacion de datos y grafico
-    global buffer, write_idx, display, iniciar_tkinter
+    global buffer, index, display, iniciar_tkinter
 
-    if not iniciar_tkinter:
+    if not iniciar_tkinter:  #salgo del loop de tkinter
         return
 
-    while ser.in_waiting >= 2:
+    while ser.in_waiting >= 2: #lee datos del puerto serie si hay al menos 2 bytes disponibles
         raw = ser.read(2)
         value = raw[0] | (raw[1] << 8)
         value = value * 5.0 / 1023.0
 
-        buffer[write_idx % buffer.size] = value    #elimina jitter visual, el indice crece indefinidamente, pero se reajusta el buffer_size
-        write_idx += 1
+        buffer[index % buffer.size] = value    #elimina jitter visual, el indice crece indefinidamente, pero se reajusta el buffer_size
+        index += 1
 
-    N = len(display)
-    if run_stop and (write_idx >= N):
-        idxs = (np.arange(write_idx - N, write_idx)) % buffer.size
-        display[:] = buffer[idxs]
+    N = len(display)          #cantidad de muestras a mostrar en pantalla
+    if run_stop and (index >= N):  #actualiza grafico solo si no esta en pausa y hay suficientes datos
+        idxs = (np.arange(index - N, index)) % buffer.size  #indices circulares para obtener las ultimas N muestras
+        display[:] = buffer[idxs]  #actualiza datos a mostrar segun los indices obtenidos
 
-    line.set_ydata(display)
+    line.set_ydata(display)        #actualiza datos del grafico
     canvas.draw_idle()
-    compute_measurements(display, fs)
+    measurements(display, fs)      #actualiza mediciones
 
 
     root.after(1, update)
@@ -238,11 +238,12 @@ def update():                      #funcion principal de actualizacion de datos 
 
 
 ################################################################
-# Inicializacion de time/div y comienzo del loop principal de tkinter
+# Inicializacion de time/div
 time_scale.set(time_div_index)
 update_time_scale()
 update_time_label()
 
+# Comienzo del loop principal de tkinter
 root.after(1, update)
 root.mainloop()
 ################################################################
