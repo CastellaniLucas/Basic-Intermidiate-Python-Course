@@ -81,10 +81,12 @@ tk.Label(
     text="MEDICIONES",
     font=("Arial", 12, "bold")
 ).pack(pady=(5,10))
+Vactual_var = tk.StringVar(value="Vactual: --")
 Vmax_var = tk.StringVar(value="Vmax: --")
 Vmin_var = tk.StringVar(value="Vmin: --")
 vpp_var  = tk.StringVar(value="Vpp:  --")
 vrms_var = tk.StringVar(value="Vrms: --")
+tk.Label(meas_frame, textvariable=Vactual_var, font=("Consolas", 18)).pack(anchor="w", pady=2)
 tk.Label(meas_frame, textvariable=Vmax_var, font=("Consolas", 18)).pack(anchor="w", pady=2)
 tk.Label(meas_frame, textvariable=Vmin_var, font=("Consolas", 18)).pack(anchor="w", pady=2)
 tk.Label(meas_frame, textvariable=vpp_var, font=("Consolas", 18)).pack(anchor="w", pady=2)
@@ -203,7 +205,9 @@ def measurements(sig, fs):  #calcula y actualiza mediciones
     vrms = np.sqrt(np.mean(sig**2))
     Vmax = sig.max()
     Vmin = sig.min()
+    Vact = sig[-1]
 
+    Vactual_var.set(value=f"Vact: {Vact:6.3f} V")
     Vmax_var.set(f"Vmax: {Vmax:6.3f} V")
     Vmin_var.set(f"Vmin: {Vmin:6.3f} V")
     vpp_var.set(f"Vpp:  {vpp:6.3f} V")
